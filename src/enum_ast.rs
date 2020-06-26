@@ -5,37 +5,37 @@ pub enum Node
 	LeafNode(bool),
 }
 
-pub fn eval(node: Node) -> bool
+pub fn eval(node: &Node) -> bool
 {
-	let val = match node
+	let val = match &*node
 	{
 		Node::BinaryInnerNode(a, b, op) =>
 		{
-			let _nested_a = match *a
+			let _nested_a = match &**a
 			{
-				Node::BinaryInnerNode(n_a, n_b, n_op) => n_op(eval(*n_a), eval(*n_b)),
-				Node::UnaryInnerNode(b, n_op) => n_op(eval(*b)),
-				Node::LeafNode(b) => b,
+				Node::BinaryInnerNode(n_a, n_b, n_op) => n_op(eval(&*n_a), eval(&*n_b)),
+				Node::UnaryInnerNode(b, n_op) => n_op(eval(&*b)),
+				Node::LeafNode(b) => *b,
 			};
 
-			let _nested_b = match *b
+			let _nested_b = match &**b
 			{
-				Node::BinaryInnerNode(n_a, n_b, n_op) => n_op(eval(*n_a), eval(*n_b)),
-				Node::UnaryInnerNode(b, n_op) => n_op(eval(*b)),
-				Node::LeafNode(b) => b,
+				Node::BinaryInnerNode(n_a, n_b, n_op) => n_op(eval(&*n_a), eval(&*n_b)),
+				Node::UnaryInnerNode(b, n_op) => n_op(eval(&*b)),
+				Node::LeafNode(b) => *b,
 			};
 
 			op(_nested_a, _nested_b)
 			
 		},
-		Node::UnaryInnerNode(b, op) => op(eval(*b)),
-		Node::LeafNode(b) => b
+		Node::UnaryInnerNode(b, op) => op(eval(&*b)),
+		Node::LeafNode(b) => *b
 	};
 
 	val
 }
 
-pub fn print_expression(node: Node) -> String
+pub fn print_expression(node: &Node) -> String
 {
 	let mut s: String = String::from("");
 
@@ -43,11 +43,11 @@ pub fn print_expression(node: Node) -> String
 	{
 		Node::BinaryInnerNode(a, b, _op) => 
 		{
-			s.push_str(format!("{}{}{}{}{}", "[ ", print_expression(*a).as_str(), " OP ", print_expression(*b).as_str(), " ]").as_str());
+			s.push_str(format!("{}{}{}{}{}", "[ ", print_expression(&*a).as_str(), " OP ", print_expression(&*b).as_str(), " ]").as_str());
 		},
 		Node::UnaryInnerNode(b, _op) =>
 		{
-			s.push_str(format!("{}{}{}{}", "[ ", " OP ", print_expression(*b).as_str(), " ]").as_str());
+			s.push_str(format!("{}{}{}{}", "[ ", " OP ", print_expression(&*b).as_str(), " ]").as_str());
 		},
 		Node::LeafNode(b) =>
 		{

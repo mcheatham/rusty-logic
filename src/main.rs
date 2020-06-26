@@ -21,8 +21,8 @@ fn main() {
     let inner_12_34: enum_ast::Node = enum_ast::make_binary_inner_node(inner_1_2, inner_3_4, Box::new(|a, b| a && b));
     let unary_last: enum_ast::Node = enum_ast::make_unary_inner_node(inner_12_34, Box::new(|a| !a));
 
-    // let bool_ret = enum_ast::eval(unary_last);
-    // println!("{}", bool_ret);
+    let bool_ret = enum_ast::eval(&unary_last);
+    println!("{}", bool_ret);
 
-    println!("{}", enum_ast::print_expression(unary_last));
+    println!("{}", enum_ast::print_expression(&unary_last));
 }
